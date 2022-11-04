@@ -1,59 +1,104 @@
 <template>
   <div id="navLateral">
-    <form class="nameForm">
-      <input
-        type="text"
-        name=""
-        id="inputName"
-        placeholder="search by name"
-        :value="nameCh"
-        @input="(e) => (nameCh = e.target.value)"
-      />
-      <button id="submitButton" type="submit" @click="setNameCh">
-        <span class="material-symbols-outlined"> search </span>
-      </button>
-    </form>
-    <label class="label" for="">FILTER BY</label>
-    <select name="" class="selectFilter">
+    <input
+      type="text"
+      name=""
+      id="inputName"
+      class="inputFilter"
+      placeholder="search by name"
+      :value="name"
+      @input="(e) => (name = e.target.value)"
+    />
+
+    <input
+      type="text"
+      name=""
+      id="inputSpecies"
+      class="inputFilter"
+      placeholder="search by species"
+      :value="species"
+      @input="(e) => (species = e.target.value)"
+    />
+
+    <input
+      type="text"
+      name=""
+      id="inputType"
+      class="inputFilter"
+      placeholder="search by Type"
+      :value="type"
+      @input="(e) => (type = e.target.value)"
+    />
+
+    <label class="label" for="">FILTER BY STATUS</label>
+    <select name="" class="selectFilter" v-model="status">
       <option value="">All</option>
-      <option value="status">Status</option>
-      <option value="gender">Gender</option>
+      <option value="alive">Alive</option>
+      <option value="dead">Dead</option>
+      <option value="unknown">Unknown</option>
     </select>
-    <label class="label" for="">Filter</label>
-    <select name="" class="selectFilter">
-      <option value="status">Status</option>
+
+    <label class="label" for="">FILTER BY GENDER</label>
+    <select name="" class="selectFilter" v-model="gender">
+      <option value="">All</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="genderless">Genderless</option>
+      <option value="unknown">Unknown</option>
     </select>
-    <label class="label" for="">ORDER BY</label>
-    <select name="" class="selectFilter">
-      <option value="status">ID -ascendent</option>
-      <option value="species">ID - descendent</option>
-    </select>
+
+    <!-- <label class="label" for="">ORDER BY</label>
+    <select name="" class="selectFilter" v-model="orderStr">
+      <option value="asc">ID - ascendent</option>
+      <option value="des">ID - descendent</option>
+    </select> -->
   </div>
   <router-link class="backBtn" to="/">BACK</router-link>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+import { onUpdated, ref } from "vue";
 
-const nameCh = ref("");
+const name = ref("");
+const status = ref("");
+const species = ref("");
+const type = ref("");
+const gender = ref("");
 
-export default {
-  name: "NavLateral",
-  data() {
-    return {
-      nameCh,
-    };
-  },
-  props: {
-    setName: { type: Function },
-  },
-  methods: {
-    setNameCh(e) {
-      e.preventDefault();
-      this.setName(nameCh);
-    },
-  },
-};
+const orderStr = ref("asc");
+
+const query = ref("");
+
+const props = defineProps({
+  setQuery: { type: Function },
+  setOrder: { type: Function },
+});
+
+onUpdated(() => {
+  let nameQuery = "";
+  let statusQuery = "";
+  let speciesQuery = "";
+  let typeQuery = "";
+  let genderQuery = "";
+
+  name.value != "" ? (nameQuery = `&name=${name.value}`) : (nameQuery = "");
+  status.value != ""
+    ? (statusQuery = `&status=${status.value}`)
+    : (statusQuery = "");
+  species.value != ""
+    ? (speciesQuery = `&species=${species.value}`)
+    : (speciesQuery = "");
+  type.value != "" ? (typeQuery = `&type=${type.value}`) : (typeQuery = "");
+  gender.value != ""
+    ? (genderQuery = `&gender=${gender.value}`)
+    : (genderQuery = "");
+
+  query.value =
+    nameQuery + statusQuery + speciesQuery + typeQuery + genderQuery;
+
+  props.setOrder(orderStr.value);
+  props.setQuery(query.value);
+});
 </script>
 
 <style scoped>
@@ -70,11 +115,12 @@ export default {
 
 select {
   width: 60%;
-  padding: 8px;
+  padding: 4px;
   border: none;
   border-radius: 5px;
   margin-bottom: 15px;
   text-align: center;
+  font-family: "Courier New", Courier, monospace;
 }
 
 label {
@@ -83,7 +129,8 @@ label {
   text-align: center;
   margin: 10px auto;
   font-weight: bolder;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
+  font-family: "Courier New", Courier, monospace;
 }
 
 option,
@@ -108,11 +155,16 @@ select {
   font-weight: bold;
 }
 
-#inputName {
-  width: 80%;
+.inputFilter {
+  width: 60%;
   font-size: 1.1rem;
-  padding: 8px;
+  padding: 4px;
   text-align: center;
+  border: none;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 8px 0;
+  font-family: "Courier New", Courier, monospace;
 }
 
 #submitButton {
@@ -124,18 +176,21 @@ select {
   background-color: rgba(255, 255, 255, 0.788);
 }
 
-.nameForm {
-  width: 60%;
-  display: flex;
-  border-radius: 5px;
-  overflow: hidden;
-  margin: 8px 0;
-}
-
 @media screen and (max-width: 1024px) {
   #navLateral {
     width: 100%;
-    height: 60vh;
+    height: 40vh;
+  }
+
+  select,
+  .inputFilter {
+    width: 40%;
+    padding: 2px;
+    font-size: 0.9rem;
+  }
+
+  label {
+    margin: 4px auto;
   }
 }
 

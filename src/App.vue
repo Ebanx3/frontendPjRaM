@@ -22,4 +22,15 @@ body {
   height: 100vh;
   overflow: hidden;
 }
+
+@media screen and (max-width: 1024px) {
+  #app {
+    overflow: auto;
+    height: auto;
+  }
+
+  body {
+    height: auto;
+  }
+}
 </style>

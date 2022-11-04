@@ -1,33 +1,24 @@
 <template>
   <div class="charactersContainer">
-    <NavLateral :setName="setName" />
-    <MainContent :nameCharacter="nameCharacter" />
+    <NavLateral :setQuery="setQuery" :setOrder="setOrder" />
+    <MainContent :query="query" :order="order" />
   </div>
 </template>
 
-<script>
+<script setup>
 import NavLateral from "../components/NavLateral.vue";
 import MainContent from "../components/MainContent.vue";
 import { ref } from "vue";
 
-const nameCharacter = ref("");
+const query = ref("");
+const order = ref("asc");
 
-export default {
-  name: "Chacters",
-  components: {
-    NavLateral,
-    MainContent,
-  },
-  data() {
-    return {
-      nameCharacter,
-    };
-  },
-  methods: {
-    setName(str) {
-      this.nameCharacter = str;
-    },
-  },
+const setQuery = (str) => {
+  query.value = str;
+};
+
+const setOrder = (str) => {
+  order.value = str;
 };
 </script>
 
@@ -40,6 +31,7 @@ export default {
 @media screen and (max-width: 1024px) {
   .charactersContainer {
     flex-direction: column;
+    height: auto;
   }
 }
 </style>

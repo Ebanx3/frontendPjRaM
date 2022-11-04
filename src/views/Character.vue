@@ -19,6 +19,7 @@
         </li>
       </ul>
     </div>
+    <div class="messagesContainer"></div>
   </div>
   <router-link to="/Characters" class="backButton">BACK</router-link>
 </template>
@@ -51,22 +52,24 @@ export default {
 .character {
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-areas:
+    "d i e"
+    "m m m";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 3fr 2fr;
   color: rgb(233, 233, 233);
-  align-items: center;
+  padding: 20px;
   font-family: "Courier New", Courier, monospace;
-  gap: 15px;
+  gap: 30px;
 }
 
 .characterImg {
-  width: 30%;
   height: auto;
   border-radius: 5px;
 }
 
 .characterInfo {
-  width: 30%;
   text-align: end;
 }
 
@@ -80,7 +83,6 @@ export default {
 }
 
 .characterEpisodes {
-  width: 30%;
   text-align: start;
 }
 
@@ -133,5 +135,77 @@ export default {
 .backButton:hover {
   color: black;
   background-color: rgba(255, 255, 255, 0.788);
+}
+
+.messagesContainer {
+  border: 1px solid gray;
+  grid-area: m;
+}
+
+@media screen and (max-width: 1024px) {
+  .linkEpisode {
+    font-size: 1rem;
+    padding: 3px;
+    width: 24px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .character {
+    height: auto;
+    grid-template-areas:
+      "d i"
+      "e e"
+      "m m";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px auto 250px;
+    overflow-y: scroll;
+    padding: 5px;
+    gap: 10px;
+  }
+
+  .characterImg {
+    width: 200px;
+  }
+
+  .characterInfo {
+    height: 200px;
+  }
+
+  .characterEpisodes {
+    grid-column: 1 / span 3;
+    margin: 10px auto;
+  }
+
+  .linkEpisode {
+    font-size: 1rem;
+    padding: 3px;
+    width: 24px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .character {
+    grid-template-areas:
+      "i"
+      "d"
+      "e"
+      "m";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .characterImg,
+  .characterInfo {
+    height: auto;
+  }
+
+  .characterImg {
+    margin: 5px auto;
+  }
+
+  .characterEpisodes {
+    grid-column: 1/2;
+  }
 }
 </style>

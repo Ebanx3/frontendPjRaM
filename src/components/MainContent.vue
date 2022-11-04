@@ -1,10 +1,17 @@
 <template>
   <div id="mainContent">
-    <PagesManager
-      :page="page"
-      :increasePage="increasePage"
-      :decreasePage="decreasePage"
-    />
+    <div id="pagesManager">
+      <span @click="decreasePage()" id="prevPage" v-if="page > 1">{{
+        page - 1
+      }}</span>
+      <span id="actualPage">{{ page }}</span>
+      <span @click="increasePage()" id="nextPage" v-if="page < maxPage">{{
+        page + 1
+      }}</span>
+    </div>
+    <h2 v-if="chars?.length == 0" class="noCharsFounded">
+      Characters not founded
+    </h2>
     <div v-for="char in chars" class="char">
       <router-link :to="{ name: 'Character', params: { id: char.id } }">
         <img :src="char.image" :alt="char.name" />
@@ -14,60 +21,55 @@
   </div>
 </template>
 
-<script>
-import PagesManager from "./PagesManager.vue";
-import { ref } from "vue";
-//para sort y filter revisar url
+<script setup>
+import { onMounted, onUpdated, ref } from "vue";
+
 const page = ref(1);
-const url = ref(`https://rickandmortyapi.com/api/character?page=${page.value}`);
+const maxPage = ref(42);
+
+const urlBase = "https://rickandmortyapi.com/api/character/";
+const url = ref(`${urlBase}?page=${page.value}`);
 
 const chars = ref([]);
 
-export default {
-  name: "MainContent",
-  props: {
-    nameCharacter: String,
-  },
-  data() {
-    return {
-      chars,
-      page,
-    };
-  },
-  created() {
-    fetch(url.value)
-      .then((res) => res.json())
-      .then((res) => {
-        this.chars = res.results;
-      });
-  },
-  beforeUpdate() {
-    this.fetchUrl();
-  },
-  methods: {
-    increasePage() {
-      page.value++;
-      fetchUrl();
-    },
-    decreasePage() {
-      page.value--;
-      fetchUrl();
-    },
-    fetchUrl() {
-      if (this.nameCharacter == "") {
-        url.value = `https://rickandmortyapi.com/api/character?page=${page.value}`;
+const fetchUrl = () => {
+  fetch(url.value)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.error) {
+        chars.value = [];
       } else {
-        url.value = `https://rickandmortyapi.com/api/character/?name=${this.nameCharacter}`;
+        maxPage.value = res.info.pages;
+        chars.value = res.results;
       }
-      fetch(url.value)
-        .then((res) => res.json())
-        .then((res) => {
-          chars.value = res.results;
-        });
-    },
-  },
-  components: { PagesManager },
+    });
 };
+
+const increasePage = () => {
+  page.value++;
+};
+
+const decreasePage = () => {
+  page.value--;
+};
+
+onMounted(() => {
+  fetchUrl();
+});
+
+onUpdated(() => {
+  if (props.query == "") {
+    url.value = `${urlBase}?page=${page.value}`;
+  } else {
+    url.value = `${urlBase}?page=${page.value}` + props.query;
+  }
+  fetchUrl();
+});
+
+const props = defineProps({
+  query: String,
+  order: String,
+});
 </script>
 
 <style>
@@ -108,9 +110,50 @@ export default {
   background-color: rgba(0, 0, 0, 0.788);
 }
 
+.noCharsFounded {
+  color: white;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+#pagesManager {
+  position: fixed;
+  z-index: 1;
+  width: 300px;
+  background-color: rgb(24, 24, 24);
+  top: 5px;
+  border-radius: 3px;
+  display: grid;
+  grid-template-areas: "p a n";
+  padding: 5px;
+  color: white;
+}
+
+#prevPage {
+  grid-area: p;
+  text-align: end;
+  cursor: pointer;
+}
+
+#actualPage {
+  grid-area: a;
+  text-align: center;
+}
+
+#nextPage {
+  grid-area: n;
+  text-align: start;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1024px) {
   #mainContent {
     width: 100%;
+  }
+
+  #pagesManager {
+    right: 10px;
+    width: 180px;
   }
 }
 </style>
