@@ -1,7 +1,20 @@
-# Vue 3 + Vite
+# Proyect with [Rick&MortyAPI](https://rickandmortyapi.com/documentation/)
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+\*Application that consumes Rick and Morty API, and a backend por manage the comments
 
-## Recommended IDE Setup
+## Technologies used
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- vue: 3.2
+- vue-router: 4.1
+- vite: 3.2
+- Backend with node.js
+- TypeScript
+- Express
+
+## Deployed on netlify
+
+[Link](https://capable-pithivier-7141b7.netlify.app)
+
+## Backend
+
+[Repository](https://github.com/Ebanx3/commentsForRaMProject)

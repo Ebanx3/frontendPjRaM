@@ -73,7 +73,7 @@ const fetchUrl = (url) => {
     });
 };
 
-const urlMessages = `http://localhost:8080/character/${route.params.id}/comments`;
+const urlMessages = `https://comments-for-ramproject.herokuapp.com/character/${route.params.id}/comments`;
 
 const getMessages = () => {
   fetch(urlMessages)
@@ -81,8 +81,9 @@ const getMessages = () => {
     .then((res) => (comments.value = res.data));
 };
 
-const sendMessage = () => {
-  console.log(char.value);
+const sendMessage = (e) => {
+  e.preventDefault();
+
   fetch(urlMessages, {
     method: "post",
     headers: { "Content-Type": "application/json" },
