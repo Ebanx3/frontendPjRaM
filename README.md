@@ -1,6 +1,6 @@
 # Proyect with [Rick&MortyAPI](https://rickandmortyapi.com/documentation/)
 
-\*Application that consumes Rick and Morty API, and a backend por manage the comments
+- Application that consumes Rick and Morty API, and a backend por manage the comments
 
 ## Technologies used
 
